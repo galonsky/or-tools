@@ -215,6 +215,7 @@ endif  # LINUX
 ifeq ($(PLATFORM),MACOSX)
   CCC = clang++ -fPIC -std=c++11 -mmacosx-version-min=$(MAC_MIN_VERSION) -stdlib=libc++
   DYNAMIC_LD = ld -arch x86_64 -bundle -flat_namespace -undefined suppress -macosx_version_min $(MAC_MIN_VERSION) -lSystem -compatibility_version 1.0 -current_version $(OR_TOOLS_VERSION)
+  MAC_COMPATIBILITY = -mmacosx-version-min=$(MAC_MIN_VERSION)
 
   CMAKE := $(shell which cmake)
   ifeq ($(CMAKE),)
@@ -291,7 +292,18 @@ endif  # MAC OS X
 
 CFLAGS = $(DEBUG) -I$(INC_DIR) -I$(EX_DIR) -I$(GEN_DIR) $(GFLAGS_INC) $(ARCH) \
 	-Wno-deprecated $(PROTOBUF_INC) $(CBC_INC) $(CLP_INC) $(GLPK_INC) \
-        $(SCIP_INC) $(SLM_INC) $(GUROBI_INC) $(CPLEX_INC) -DUSE_GLOP -DUSE_BOP $(SPARSEHASH_INC)
+        $(SCIP_INC) $(SLM_INC) $(GUROBI_INC) $(CPLEX_INC) -DUSE_GLOP -DUSE_BOP $(SPARSEHASH_INC) $(MAC_COMPATIBILITY) -stdlib=libc++
+CXXFLAGS = $(MAC_COMPATIBILITY) -stdlib=libc++
+CMAKE_OSX_DEPLOYMENT_TARGET = 10.8
+LDFLAGS = $(MAC_COMPATIBILITY)
+CMAKE_CXX_FLAGS = $(MAC_COMPATIBILITY)
+
+export CFLAGS
+export CXXFLAGS
+export CXX_FLAGS
+export LDFLAGS
+export CMAKE_OSX_DEPLOYMENT_TARGET
+export CMAKE_CXX_FLAGS = $(CXXFLAGS) -fPIC
 
 JNIFLAGS = $(JNIDEBUG) -I$(INC_DIR) -I$(EX_DIR) -I$(GEN_DIR) $(GFLAGS_INC) $(ARCH) \
         -Wno-deprecated $(PROTOBUF_INC) $(CBC_INC) $(CLP_INC) $(GLPK_INC) $(SCIP_INC) $(SLM_INC) $(GUROBI_INC) $(CPLEX_INC) -DUSE_GLOP -DUSE_BOP
