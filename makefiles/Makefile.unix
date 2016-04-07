@@ -217,8 +217,8 @@ ifeq ($(PLATFORM),MACOSX)
   DYNAMIC_LD = ld -arch x86_64 -bundle -flat_namespace -undefined suppress -macosx_version_min $(MAC_MIN_VERSION) -lSystem -compatibility_version 1.0 -current_version $(OR_TOOLS_VERSION)
   MAC_COMPATIBILITY = -mmacosx-version-min=$(MAC_MIN_VERSION)
 
-  CXXFLAGS = $(CXXFLAGS) $(MAC_COMPATIBILITY) -stdlib=libc++
-  LDFLAGS = $(LDFLAGS) $(MAC_COMPATIBILITY)
+  CXXFLAGS += $(MAC_COMPATIBILITY) -stdlib=libc++
+  LDFLAGS += $(MAC_COMPATIBILITY)
   CFLAGS = $(CXXFLAGS) $(MAC_COMPATIBILITY) -stdlib=libc++
 
   CMAKE := $(shell which cmake)
@@ -294,7 +294,7 @@ ifeq ($(PLATFORM),MACOSX)
   FLEX = dependencies/install/bin/flex
 endif  # MAC OS X
 
-CFLAGS = $(CFLAGS) $(DEBUG) -I$(INC_DIR) -I$(EX_DIR) -I$(GEN_DIR) $(GFLAGS_INC) $(ARCH) \
+CFLAGS += $(DEBUG) -I$(INC_DIR) -I$(EX_DIR) -I$(GEN_DIR) $(GFLAGS_INC) $(ARCH) \
 	-Wno-deprecated $(PROTOBUF_INC) $(CBC_INC) $(CLP_INC) $(GLPK_INC) \
         $(SCIP_INC) $(SLM_INC) $(GUROBI_INC) $(CPLEX_INC) -DUSE_GLOP -DUSE_BOP $(SPARSEHASH_INC)
 
